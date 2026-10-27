@@ -14,7 +14,7 @@ blob-report/
 playwright/.cache/
 scratch/
 screenshots/
-reports/
+/reports/
 
 # Logs
 *.log

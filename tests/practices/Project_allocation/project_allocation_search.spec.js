@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { ProjectAllocationPage } = require('../../pages/ProjectAllocationPage');
-const { setupAuthenticatedPage, performSearch, expectSearchResults, expectNoSearchResults } = require('./helpers/practicesTestHelper');
+const { ProjectAllocationPage } = require('../../../pages/ProjectAllocationPage');
+const { setupAuthenticatedPage, performSearch, expectSearchResults, expectNoSearchResults } = require('../helpers/practicesTestHelper');
 
 test.describe('SmartTracker Project Allocations - Search Validation Suite', () => {
   let page;
