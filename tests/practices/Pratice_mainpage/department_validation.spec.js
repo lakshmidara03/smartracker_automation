@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { setupAuthenticatedPage } = require('./helpers/practicesTestHelper');
+const { setupAuthenticatedPage } = require('../helpers/practicesTestHelper');
 
 test.describe('SmartTracker Practices Validation Tests', () => {
   let page;

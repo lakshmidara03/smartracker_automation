@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { LoginPage } = require('../../../pages/LoginPage');
-const { setupAuthenticatedPage } = require('../../practices/helpers/practicesTestHelper');
+const { setupAuthenticatedPage } = require('../helpers/practicesTestHelper');
 const { PracticesPage } = require('../../../pages/PracticesPage');
 const { ProjectAllocationPage } = require('../../../pages/ProjectAllocationPage');
 const fs = require('fs');

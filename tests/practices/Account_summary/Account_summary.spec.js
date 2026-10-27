@@ -4,7 +4,7 @@ const { PracticesPage } = require('../../../pages/PracticesPage');
 const fs = require('fs');
 const path = require('path');
 const { executeQuery } = require('../../../utils/dbUtils');
-const { setupAuthenticatedPage } = require('../../practices/helpers/practicesTestHelper');
+const { setupAuthenticatedPage } = require('../helpers/practicesTestHelper');
 
 test.describe.configure({ mode: 'serial' });
 

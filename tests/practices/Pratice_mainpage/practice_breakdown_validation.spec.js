@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { executeQuery } = require('../../../utils/dbUtils');
 const { PracticesPage } = require('../../../pages/PracticesPage');
-const { setupAuthenticatedPage } = require('../../practices/helpers/practicesTestHelper');
+const { setupAuthenticatedPage } = require('../helpers/practicesTestHelper');
 
 const practices = [
     'Digital Transformation',

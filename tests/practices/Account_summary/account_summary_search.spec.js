@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { AccountSummaryPage } = require('../../pages/AccountSummaryPage');
-const { setupAuthenticatedPage, performSearch, expectSearchResults, expectNoSearchResults } = require('./helpers/practicesTestHelper');
+const { AccountSummaryPage } = require('../../../pages/AccountSummaryPage');
+const { setupAuthenticatedPage, performSearch, expectSearchResults, expectNoSearchResults } = require('../helpers/practicesTestHelper');
 
 
 

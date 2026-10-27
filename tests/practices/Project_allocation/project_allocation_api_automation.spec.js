@@ -45,7 +45,7 @@ function getAuthToken() {
             const tokenItem = origin?.localStorage?.find(item => item.name === 'token');
             if (tokenItem?.value) return tokenItem.value.trim();
         }
-    } catch {}
+    } catch { }
     return '';
 }
 

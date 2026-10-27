@@ -1,8 +1,9 @@
+
 const { test, expect } = require('@playwright/test');
 
 const {
     setupAuthenticatedPage
-} = require('../../practices/helpers/practicesTestHelper');
+} = require('../helpers/practicesTestHelper');
 
 const {
     executeQuery

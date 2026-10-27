@@ -1,13 +1,13 @@
 const { test, expect } = require('@playwright/test');
-const { PracticesPage } = require('../../pages/PracticesPage');
+const { PracticesPage } = require('../../../../pages/PracticesPage');
 const fs = require('fs');
-const { validateExcelFile } = require('../../utils/excelUtils');
-const { setupAuthenticatedPage } = require('../practices/helpers/practicesTestHelper');
+const { validateExcelFile } = require('../../../../utils/excelUtils');
+const { setupAuthenticatedPage } = require('../../helpers/practicesTestHelper');
 
 test.describe('Practices Excel Export Validation', () => {
   let page;
   let practicesPage;
-  
+
   test.beforeAll(async ({ browser }) => {
     const res = await setupAuthenticatedPage(browser);
     page = res.page;
@@ -39,15 +39,15 @@ test.describe('Practices Excel Export Validation', () => {
 
     console.log(`\n--- Excel Validation Report ---`);
     console.log(`File Name: ${downloadedFilePath}`);
-    
+
     excelResults.forEach(sheet => {
       console.log(`\nWorksheet Name: ${sheet.name}`);
       console.log(`Total Rows: ${sheet.rowCount}`);
       console.log(`Total Columns: ${sheet.columnCount}`);
-      
+
       const allHeaders = sheet.headers.map(h => h.header).join(' | ');
       console.log(`Headers (Left-to-Right): \n${allHeaders}`);
-      
+
       if (sheet.missingData.length > 0) {
         console.log(`\nMissing/Empty Unexpected Values Found:`);
         sheet.missingData.forEach(err => console.log(`  - ${err}`));
@@ -58,7 +58,7 @@ test.describe('Practices Excel Export Validation', () => {
       // Assertions
       expect(sheet.rowCount).toBeGreaterThan(0);
       expect(sheet.headers.length).toBeGreaterThan(0);
-      
+
       // Explicitly fail the test if the validation utility found missing/empty unexpected values
       expect(sheet.missingData, `Missing/empty unexpected values found in ${sheet.name}`).toHaveLength(0);
     });
