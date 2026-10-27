@@ -1,0 +1,26 @@
+# Secrets & Sensitive Data
+.env
+.env.*
+!.env.example
+.auth/
+playwright/.auth/
+
+# Playwright & Artifacts
+node_modules/
+test-results/
+test-results-run/
+playwright-report/
+blob-report/
+playwright/.cache/
+scratch/
+screenshots/
+reports/
+
+# Logs
+*.log
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
