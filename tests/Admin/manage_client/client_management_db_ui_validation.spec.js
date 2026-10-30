@@ -39,7 +39,7 @@ async function getDbConnection() {
     return dbConnection;
 }
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 test.describe('Admin Client Management - Comprehensive UI vs MySQL DB Validation', () => {
     test.setTimeout(90000);

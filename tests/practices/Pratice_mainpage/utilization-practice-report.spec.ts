@@ -51,10 +51,8 @@ const HOST_BASE_URL = RAW_BASE_URL
     .replace(/\/+$/, '')
     .replace(/\/api$/, '');
 
-const BASE_URL = `${HOST_BASE_URL}/api`;
-
-const UTILIZATION_BASE_URL =
-    `${BASE_URL}/api/v1/utilization/reports/as-of-date`;
+const API_ROOT = (process.env.API_BASE_URL || (HOST_BASE_URL.includes('localhost') ? 'http://localhost:8080/api' : `${HOST_BASE_URL}/api/api`)).replace(/\/+$/, '');
+const UTILIZATION_BASE_URL = `${API_ROOT}/v1/utilization/reports/as-of-date`;
 
 
 
@@ -2592,8 +2590,7 @@ test.describe(
             async ({ request }) => {
 
                 const invalidEndpoint =
-
-                    `${BASE_URL}/api/v1/utilization/reports/invalid-endpoint`;
+                    `${API_ROOT}/v1/utilization/reports/invalid-endpoint`;
 
 
 

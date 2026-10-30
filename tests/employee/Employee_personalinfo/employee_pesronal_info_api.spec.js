@@ -9,7 +9,7 @@ const HOST_BASE_URL = (process.env.BASE_URL || 'https://13.61.179.149')
     .replace(/\/+$/, '')
     .replace(/\/api$/, '');
 
-const API_BASE_URL = `${HOST_BASE_URL}/api/api`;
+const API_BASE_URL = (process.env.API_BASE_URL || (HOST_BASE_URL.includes('localhost') ? 'http://localhost:8080/api' : `${HOST_BASE_URL}/api/api`)).replace(/\/+$/, '');
 const API_TOKEN = process.env.API_TOKEN;
 
 // Qualifiers captured from UI Network tab & database lookup table

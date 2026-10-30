@@ -2,9 +2,8 @@ const { test, expect } = require('@playwright/test');
 const { executeQuery } = require('../../../utils/dbUtils');
 const fs = require('fs');
 const path = require('path');
-
-const ALLOCATION_URL =
-    'https://13.61.179.149/employee/employee-allocation';
+const BASE_URL = (process.env.BASE_URL || 'http://localhost:4200/').replace(/\/$/, '');
+const ALLOCATION_URL = `${BASE_URL}/employee/employee-allocation`;
 
 // =============================================================================
 // DATABASE QUERY
@@ -1260,11 +1259,26 @@ test.describe('SmartTracker - Employee Allocation DB vs UI Validation', () => {
 
             expect(processed).toBe(targetIds.length);
 
+            // Construct detailed array of all failed employees and their exact field discrepancies & reasons
+            const failureDetailsArray = allValidationResults
+                .filter(result => result.validationStatus !== 'MATCH ✅')
+                .map(result => ({
+                    employeeId: result.employeeId,
+                    employeeName: result.employeeName,
+                    failingFields: Array.from(new Set((result.fieldMismatches || []).map(m => m.field))),
+                    totalMismatches: (result.fieldMismatches || []).length,
+                    discrepancies: (result.fieldMismatches || []).map(m => ({
+                        field: m.field,
+                        dbValue: m.dbValue,
+                        uiValue: m.uiValue,
+                        reason: `Field '${m.field}' value mismatch: DB has "${m.dbValue}" but UI displays "${m.uiValue}"`
+                    }))
+                }));
+
             expect(
-                failedCount,
-                `${failedCount} employee(s) failed field-by-field validation. ` +
-                'Check reports/employee_allocation_report.html.'
-            ).toBe(0);
+                failureDetailsArray,
+                `${failureDetailsArray.length} employee(s) failed field-by-field validation. Check reports/employee_allocation_report.html.`
+            ).toHaveLength(0);
         }
     );
 });

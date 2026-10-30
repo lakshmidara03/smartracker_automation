@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const API_URL =
-    'https://13.61.179.149/api/api/sow/get/allSoW';
+const API_ROOT = (process.env.API_BASE_URL || (process.env.BASE_URL?.includes('localhost') ? 'http://localhost:8080/api' : 'https://13.61.179.149/api/api')).replace(/\/+$/, '');
+const API_URL = `${API_ROOT}/sow/get/allSoW`;
 
 import fs from 'fs';
 import path from 'path';
@@ -141,7 +141,7 @@ function normalizeBoolean(value: any): boolean | null {
     return Number(value) === 1;
 }
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 test.describe(
     'SmartTracker - SoW API vs Database Validation',
@@ -1338,7 +1338,7 @@ test.describe(
                     const { request } = require('@playwright/test');
                     const reqContext = await request.newContext();
 
-                    const response = await reqContext.get('https://13.61.179.149/api/api/sow/get/allSoW', {
+                    const response = await reqContext.get(`${API_ROOT}/sow/get/allSoW`, {
                         headers: {
                             'Authorization': 'Bearer INVALID_TOKEN_123',
                             'Accept': 'application/json, text/plain, */*'
@@ -1357,7 +1357,7 @@ test.describe(
                     const { request } = require('@playwright/test');
                     const reqContext = await request.newContext();
 
-                    const response = await reqContext.get('https://13.61.179.149/api/api/sow/get/nonExistentSoWFilter', {
+                    const response = await reqContext.get(`${API_ROOT}/sow/get/nonExistentSoWFilter`, {
                         headers: {
                             'Authorization': `Bearer ${API_TOKEN}`,
                             'Accept': 'application/json, text/plain, */*'

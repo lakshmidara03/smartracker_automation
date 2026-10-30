@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL =
-    'https://13.61.179.149/employee/employee-basic-info';
+const ROOT_URL = (process.env.BASE_URL || 'http://localhost:4200/').replace(/\/$/, '');
+const BASE_URL = `${ROOT_URL}/employee/employee-basic-info`;
 
 // ============================================================
 // HELPER FUNCTIONS

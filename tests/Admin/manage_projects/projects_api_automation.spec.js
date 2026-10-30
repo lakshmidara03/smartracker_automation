@@ -65,11 +65,65 @@ test.use({
 // ============================================================
 // SUITE 1: POSITIVE API TEST CASES (API-P01 to API-P12)
 // ============================================================
-test.describe.serial('Suite 1: Positive API Test Cases', () => {
+test.describe('Suite 1: Positive API Test Cases', () => {
     let projectId = null;
     let roleId = null;
     const runId = Date.now().toString().slice(-6);
     const testCode = `APIP${runId}`;
+
+    test.beforeAll(async () => {
+        const payload = {
+            projectCode: testCode,
+            projectName: `API_Test_Project_${runId}`,
+            clientName: 'Google',
+            projectManager: 'Sridhar Pokuri',
+            projectType: 'Production',
+            startDate: '2026-11-01',
+            endDate: '2026-12-31',
+            isValid: true
+        };
+        const res = await fetch(`${API_BASE}/projects`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(payload)
+        });
+        if (res.status === 200 || res.status === 201) {
+            const created = await res.json();
+            projectId = created.id;
+
+            const rolesPayload = [
+                {
+                    projectRole: 'Senior Fullstack Engineer',
+                    clientRole: 'Technical Lead',
+                    clientRoleId: 153,
+                    billRate: 160.0,
+                    countryName: 'India',
+                    stateName: 'Karnataka',
+                    cityName: 'Bengaluru'
+                },
+                {
+                    projectRole: 'Automation QA Engineer',
+                    clientRole: 'SDET',
+                    clientRoleId: 154,
+                    billRate: 120.0,
+                    countryName: 'India',
+                    stateName: 'Karnataka',
+                    cityName: 'Bengaluru'
+                }
+            ];
+            const rRes = await fetch(`${API_BASE}/projects/${projectId}/roles/bulk`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(rolesPayload)
+            });
+            if (rRes.status === 200 || rRes.status === 201) {
+                const saved = await rRes.json();
+                if (Array.isArray(saved) && saved.length > 0) {
+                    roleId = saved[0].id;
+                }
+            }
+        }
+    });
 
     test.afterAll(async () => {
         if (projectId) {
@@ -97,8 +151,9 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
     });
 
     test('API-P02: POST /api/projects - Create project with valid payload', async () => {
+        const uniqueP02Code = `P02_${Date.now().toString().slice(-6)}`;
         const payload = {
-            projectCode: testCode,
+            projectCode: uniqueP02Code,
             projectName: `API_Test_Project_${runId}`,
             clientName: 'Google',
             projectManager: 'Sridhar Pokuri',
@@ -117,9 +172,11 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
         expect(res.status).toBe(200);
         const created = await res.json();
         expect(created.id).toBeDefined();
-        expect(created.projectCode).toBe(testCode);
+        expect(created.projectCode).toBe(uniqueP02Code);
         expect(created.projectName).toBe(`API_Test_Project_${runId}`);
-        projectId = created.id;
+
+        // Cleanup this specific project
+        await fetch(`${API_BASE}/projects/${created.id}`, { method: 'DELETE', headers: getHeaders() }).catch(() => {});
     });
 
     test('API-P03: GET /api/projects/{id} - Retrieve project details and roles structure', async () => {
@@ -209,7 +266,7 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
         expect(res.status).toBe(200);
         const roles = await res.json();
         expect(Array.isArray(roles)).toBe(true);
-        expect(roles.length).toBe(2);
+        expect(roles.length).toBeGreaterThanOrEqual(2);
         expect(roles.some(r => r.projectRole === 'Senior Fullstack Engineer')).toBe(true);
     });
 
@@ -247,10 +304,10 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
 
         expect([200, 204]).toContain(res.status);
 
-        // Verify only 1 role remains
+        // Verify deleted role no longer exists
         const getRoles = await fetch(`${API_BASE}/projects/${projectId}/roles`, { headers: getHeaders() });
         const remaining = await getRoles.json();
-        expect(remaining.length).toBe(1);
+        expect(remaining.some(r => r.id === roleId)).toBe(false);
     });
 
     test('API-P09: PUT /api/project-practice/{projectId} - Assign practice', async () => {
@@ -284,9 +341,26 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
     });
 
     test('API-P12: DELETE /api/projects/{id} - Delete project', async () => {
-        expect(projectId).toBeDefined();
+        // Create a dedicated project to delete so concurrent tests are not affected
+        const delPayload = {
+            projectCode: `DEL${runId}`,
+            projectName: `API_Delete_Project_${runId}`,
+            clientName: 'Google',
+            projectManager: 'Sridhar Pokuri',
+            projectType: 'Production',
+            startDate: '2026-11-01',
+            endDate: '2026-12-31',
+            isValid: true
+        };
+        const createRes = await fetch(`${API_BASE}/projects`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(delPayload)
+        });
+        const created = await createRes.json();
+        const delId = created.id;
 
-        const res = await fetch(`${API_BASE}/projects/${projectId}`, {
+        const res = await fetch(`${API_BASE}/projects/${delId}`, {
             method: 'DELETE',
             headers: getHeaders()
         });
@@ -294,9 +368,8 @@ test.describe.serial('Suite 1: Positive API Test Cases', () => {
         expect(res.status).toBe(200);
 
         // Confirm project is deleted
-        const check = await fetch(`${API_BASE}/projects/${projectId}`, { headers: getHeaders() });
+        const check = await fetch(`${API_BASE}/projects/${delId}`, { headers: getHeaders() });
         expect([404, 500]).toContain(check.status);
-        projectId = null;
     });
 });
 

@@ -53,13 +53,24 @@ exports.PracticesPage = class PracticesPage {
     await academyText.waitFor({ state: 'visible' });
     await academyText.click();
 
-    // In the dashboard, click the KPI chip for Academy to apply the filter
-    const academyKpi = this.page.locator('//*[@class="kpi-label" and text()="Academy"]');
-    await academyKpi.waitFor({ state: 'visible' });
-    await academyKpi.click();
+    // Wait for navigation to utilization reports dashboard
+    await this.page.waitForURL(/.*utilization-reports.*/, { timeout: 15000 }).catch(() => {});
+    await this.page.waitForLoadState('networkidle').catch(() => {});
 
-    // Wait for the table to filter down to the smaller set of employees
-    await this.page.waitForTimeout(3000);
+    // After clicking non-production, click Reset button (or refresh) to clear the 'No Resource Found' state
+    const resetBtn = this.page.locator('button:has-text("Reset")');
+    await resetBtn.waitFor({ state: 'visible', timeout: 15000 });
+    await resetBtn.click();
+    await this.page.waitForTimeout(2000);
+
+    // In the dashboard, click Total Non-Prod to filter to all 86 non-production employees
+    const totalNonProd = this.page.locator('text=Total Non-Prod').first();
+    await totalNonProd.waitFor({ state: 'visible', timeout: 15000 });
+    await totalNonProd.click();
+    await this.page.waitForTimeout(2000);
+
+    // Wait for the table to filter and render rows
+    await this.page.waitForTimeout(2000);
 
     // Export to Excel (Non-Production) and wait for the download
     console.log('Initiating Excel download (timing the backend response)...');

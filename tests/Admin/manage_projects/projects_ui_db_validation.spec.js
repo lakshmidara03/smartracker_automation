@@ -216,7 +216,8 @@ test.describe('Suite 1: UI vs Database Parity Validation', () => {
 // ============================================================
 // SUITE 2: UI PROJECT CREATION, VERIFICATION & CASCADE DELETION
 // ============================================================
-test.describe.serial('Suite 2: UI Project Creation & Cascade Deletion against Database', () => {
+test.describe('Suite 2: UI Project Creation & Cascade Deletion against Database', () => {
+    test.describe.configure({ mode: 'serial' });
     const runId = Date.now().toString().slice(-6);
     const demoProject = {
         name: `UIDB_Demo_${runId}`,

@@ -213,7 +213,7 @@ async function cleanupDbProject(projectCode) {
 // ============================================================
 // SUITE 1: POSITIVE TEST CASES (CM-P01 to CM-P16)
 // ============================================================
-test.describe.serial('Suite 1: Positive Test Cases (CM-P01 to CM-P16)', () => {
+test.describe('Suite 1: Positive Test Cases (CM-P01 to CM-P16)', () => {
     const demoProject = {
         name: `AutoPositive ${uniqueId()}`,
         code: `POS${uniqueId()}`

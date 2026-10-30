@@ -5,6 +5,8 @@ const path = require('path');
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
+test.use({ trace: 'off' });
+
 const baseUrl = (process.env.UI_BASE_URL || (process.env.BASE_URL && !process.env.BASE_URL.includes('13.61.179.149') ? process.env.BASE_URL : 'http://localhost:4200')).replace(/\/$/, '');
 const REPORT_URL = `${baseUrl}/reports/bench-reports`;
 

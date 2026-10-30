@@ -22,8 +22,9 @@ async function setupAuthenticatedPage(browser) {
     return { context, page, practicesPage };
 }
 
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../../../.env') });
 async function loginAndNavigatePractices(page) {
-    const baseUrl = process.env.BASE_URL || 'https://13.61.179.149/';
+    const baseUrl = process.env.BASE_URL || 'http://localhost:4200/';
     // Auth state (cookies/localStorage) is pre-loaded by global setup.
     // Navigate to the app home – the session should already be active.
     await page.goto(baseUrl, { waitUntil: 'load' });

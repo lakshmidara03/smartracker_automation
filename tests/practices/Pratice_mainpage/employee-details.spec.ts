@@ -17,12 +17,8 @@ const HOST_BASE_URL = RAW_BASE_URL
     .replace(/\/+$/, '')
     .replace(/\/api$/, '');
 
-const BASE_URL = `${HOST_BASE_URL}/api`;
-
-// IMPORTANT:
-// Actual endpoint is /api/api/employeeDetails
-const EMPLOYEE_DETAILS_URL =
-    `${BASE_URL}/api/employeeDetails`;
+const API_ROOT = (process.env.API_BASE_URL || (HOST_BASE_URL.includes('localhost') ? 'http://localhost:8080/api' : `${HOST_BASE_URL}/api/api`)).replace(/\/+$/, '');
+const EMPLOYEE_DETAILS_URL = `${API_ROOT}/employeeDetails`;
 
 const API_TOKEN = process.env.API_TOKEN;
 
@@ -3381,7 +3377,7 @@ test.describe(
                 const response =
                     await getJson(
                         request,
-                        `${BASE_URL}/api/employeeDetailsInvalid?practiceName=Data%20%26%20AI`
+                        `${API_ROOT}/employeeDetailsInvalid?practiceName=Data%20%26%20AI`
                     );
 
                 expect(

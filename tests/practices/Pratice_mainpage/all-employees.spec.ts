@@ -8,10 +8,10 @@ dotenv.config();
    CONFIGURATION
 ============================================================ */
 
-const BASE_URL = 'https://13.61.179.149/api';
+const BASE_URL = (process.env.API_BASE_URL || (process.env.BASE_URL?.includes('localhost') ? 'http://localhost:8080/api' : 'https://13.61.179.149/api/api')).replace(/\/+$/, '');
 
 const ALL_EMPLOYEES_ENDPOINT =
-    `${BASE_URL}/api/get/allEmployee`;
+    `${BASE_URL}/get/allEmployee`;
 
 const API_TOKEN = process.env.API_TOKEN;
 

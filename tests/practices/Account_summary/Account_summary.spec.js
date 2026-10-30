@@ -6,7 +6,7 @@ const path = require('path');
 const { executeQuery } = require('../../../utils/dbUtils');
 const { setupAuthenticatedPage } = require('../helpers/practicesTestHelper');
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 // ============================================================
 // CLIENT LIST

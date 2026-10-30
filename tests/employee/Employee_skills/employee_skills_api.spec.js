@@ -11,7 +11,18 @@ const SKILLS_API_BASE_URL = (
     'http://localhost:8080/api'
 ).replace(/\/+$/, '');
 
-const API_TOKEN = process.env.API_TOKEN;
+const fs = require('fs');
+
+function getFreshToken() {
+    try {
+        const userState = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../../.auth/user.json'), 'utf8'));
+        const localItem = userState.origins?.[0]?.localStorage?.find(x => x.name === 'token');
+        if (localItem && localItem.value) return localItem.value;
+    } catch (e) {}
+    return process.env.API_TOKEN;
+}
+
+const API_TOKEN = getFreshToken();
 
 let dbConnection = null;
 let apiContext = null;

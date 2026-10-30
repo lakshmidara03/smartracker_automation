@@ -2,8 +2,8 @@ const { test, expect } = require('@playwright/test');
 const { executeQuery } = require('../../../utils/dbUtils');
 const fs = require('fs');
 const path = require('path');
-
-const BASIC_INFO_URL = 'https://13.61.179.149/employee/employee-basic-info';
+const BASE_URL = (process.env.BASE_URL || 'http://localhost:4200/').replace(/\/$/, '');
+const BASIC_INFO_URL = `${BASE_URL}/employee/employee-basic-info`;
 
 // =============================================================================
 // FIELD DEFINITIONS & MAPPINGS (33 Fields across 4 Sections)

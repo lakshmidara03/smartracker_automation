@@ -9,7 +9,7 @@ const {
     executeQuery
 } = require('../../../utils/dbUtils');
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 test.describe(
     'SmartTracker - Estimate vs Actual DB vs UI Validation',
@@ -31,24 +31,22 @@ test.describe(
             practicesPage = res.practicesPage;
 
             const estimateTab = page.locator(
-                '//button[contains(., "Estimate vs. Actual")]'
+                "//*[@routerlink='/practice/estimate-vs-actual' and contains(normalize-space(),'Estimate vs. Actual')]"
             );
 
             if (await estimateTab.count() > 0) {
-
                 await estimateTab.first().click();
-
             } else {
-
+                const baseUrl = (process.env.UI_BASE_URL || (process.env.BASE_URL && !process.env.BASE_URL.includes('13.61.179.149') ? process.env.BASE_URL : 'http://localhost:4200/')).replace(/\/+$/, '');
                 await page.goto(
-                    'https://13.61.179.149/practice/estimate-vs-actual',
+                    `${baseUrl}/practice/estimate-vs-actual`,
                     {
                         waitUntil: 'domcontentloaded'
                     }
                 );
             }
 
-            await page.waitForTimeout(5000);
+            await page.locator('.kpi-card, .kpi-label').first().waitFor({ state: 'visible', timeout: 30000 });
 
             console.log('\n========================================');
             console.log('ESTIMATE VS ACTUAL PAGE');

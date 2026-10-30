@@ -8,7 +8,7 @@ const path = require('path');
 
 const { executeQuery } = require('../../../utils/dbUtils');
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 test.describe('SmartTracker - Client Details DB vs UI Validation', () => {
     let page;

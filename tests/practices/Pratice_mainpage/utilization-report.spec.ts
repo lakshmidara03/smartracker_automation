@@ -8,8 +8,8 @@ dotenv.config();
 // UTILIZATION REPORT API - SHARED CONFIGURATION / HELPERS
 // ============================================================
 
-const UTILIZATION_BASE_URL =
-    'https://13.61.179.149/api/api/v1/utilization/reports/as-of-date';
+const API_ROOT = (process.env.API_BASE_URL || (process.env.BASE_URL?.includes('localhost') ? 'http://localhost:8080/api' : 'https://13.61.179.149/api/api')).replace(/\/+$/, '');
+const UTILIZATION_BASE_URL = `${API_ROOT}/v1/utilization/reports/as-of-date`;
 
 const AS_OF_DATE = '2026-10-06';
 
@@ -903,8 +903,7 @@ test.describe('SmartTracker - Utilization Report API Validation', () => {
 
         const asOfDate = AS_OF_DATE;
 
-        const apiUrl =
-            `https://13.61.179.149/api/api/v1/utilization/reports/as-of-date?asOfDate=${asOfDate}`;
+        const apiUrl = `${UTILIZATION_BASE_URL}?asOfDate=${asOfDate}`;
 
         const validationFailures: string[] = [];
 

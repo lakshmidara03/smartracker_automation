@@ -101,6 +101,7 @@ test.afterAll(async () => {
 // SUITE 1: POSITIVE API TEST CASES
 // ============================================================
 test.describe('Suite 1: Positive API Test Cases', () => {
+    test.describe.configure({ mode: 'serial' });
 
     test('UR-API-P01: GET /getAllUsers - Retrieve all users as Admin', async ({ request }) => {
         const res = await request.get(`${API_BASE}/getAllUsers`, {
@@ -261,7 +262,7 @@ test.describe('Suite 2: Negative API Test Cases', () => {
     });
 
     test('UR-API-N03: PUT /updateRole/{username} - Fails when assigning non-existent role (404)', async ({ request }) => {
-        const testUsername = createdTestUsers[createdTestUsers.length - 1] || 'abhatt@relanto.ai';
+        const testUsername = 'abhatt@relanto.ai';
         const invalidRole = `NonExistentRole_${Date.now()}`;
 
         const res = await request.put(`${API_BASE}/updateRole/${testUsername}?newRoleName=${invalidRole}`, {
@@ -311,8 +312,20 @@ test.describe('Suite 2: Negative API Test Cases', () => {
 test.describe('Suite 3: Edge Cases & Database Consistency', () => {
 
     test('UR-API-E01: Single effective role per user rule', async ({ request }) => {
-        const testUsername = createdTestUsers[createdTestUsers.length - 1];
-        expect(testUsername).toBeTruthy();
+        const uniqueSuffix = Date.now();
+        const testUsername = `edge_singlerole_${uniqueSuffix}@example.com`;
+        createdTestUsers.push(testUsername);
+
+        const resReg = await request.post(`${API_BASE}/registerNewUser`, {
+            headers: getHeaders(),
+            data: {
+                userName: testUsername,
+                userFirstName: 'Edge',
+                userLastName: 'SingleRole',
+                userPassword: 'Password123!'
+            }
+        });
+        expect(resReg.status()).toBe(200);
 
         // Assign 'Super User'
         const res = await request.put(`${API_BASE}/updateRole/${testUsername}?newRoleName=Super User`, {
@@ -357,13 +370,25 @@ test.describe('Suite 3: Edge Cases & Database Consistency', () => {
     });
 
     test('UR-API-E03: Register user with duplicate username produces error or handled correctly', async ({ request }) => {
-        const existingUsername = createdTestUsers[0];
-        expect(existingUsername).toBeTruthy();
+        const dupUsername = `dup_test_${Date.now()}@example.com`;
+        createdTestUsers.push(dupUsername);
 
+        // Register user initially
+        await request.post(`${API_BASE}/registerNewUser`, {
+            headers: getHeaders(),
+            data: {
+                userName: dupUsername,
+                userFirstName: 'Original',
+                userLastName: 'User',
+                userPassword: 'Password@123'
+            }
+        });
+
+        // Attempt duplicate registration
         const res = await request.post(`${API_BASE}/registerNewUser`, {
             headers: getHeaders(),
             data: {
-                userName: existingUsername,
+                userName: dupUsername,
                 userFirstName: 'Duplicate',
                 userLastName: 'Attempt',
                 userPassword: 'Password@123'

@@ -50,7 +50,7 @@ async function getDbConnection() {
     return dbConnection;
 }
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'default' });
 
 test.describe('Client Management APIs - Full Automation Suite', () => {
     test.setTimeout(60000);

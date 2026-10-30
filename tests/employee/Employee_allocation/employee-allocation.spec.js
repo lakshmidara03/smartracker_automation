@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
-const ALLOCATION_URL = 'https://13.61.179.149/employee/employee-allocation';
+const BASE_URL = (process.env.BASE_URL || 'http://localhost:4200/').replace(/\/$/, '');
+const ALLOCATION_URL = `${BASE_URL}/employee/employee-allocation`;
 const EMPLOYEE_ID = '2068';
 
 // =============================================================================
@@ -68,10 +69,10 @@ const DATE_OVERLAP_CASES = [
     { id: 'AL-DATE-N06', name: 'Start date inside existing period', start: '2026-08-15', end: '2026-10-15', overlap: true },
     { id: 'AL-DATE-N07', name: 'End date inside existing period', start: '2026-07-15', end: '2026-09-15', overlap: true },
     { id: 'AL-DATE-N08', name: 'New period contains existing period', start: '2026-07-01', end: '2026-10-31', overlap: true },
-    { id: 'AL-DATE-N09', name: 'Overlap with second allocation', start: '2026-11-15', end: '2026-12-15', overlap: true },
-    { id: 'AL-DATE-N10', name: 'Overlap with two existing allocations', start: '2026-09-01', end: '2026-10-15', overlap: true },
-    { id: 'AL-DATE-E07', name: 'Adjacent dates at existing boundary', start: '2026-10-01', end: '2026-10-31', overlap: true }, // 2026-10-01 overlaps 2nd alloc
-    { id: 'AL-DATE-E08', name: 'New period ends before existing starts', start: '2026-07-01', end: '2026-07-31', overlap: false },
+    { id: 'AL-DATE-N09', name: 'Overlap with active allocation period', start: '2026-08-10', end: '2026-08-25', overlap: true },
+    { id: 'AL-DATE-N10', name: 'Overlap with existing allocation', start: '2026-09-01', end: '2026-10-15', overlap: true },
+    { id: 'AL-DATE-E07', name: 'Adjacent dates at existing boundary', start: '2026-09-29', end: '2026-10-31', overlap: true },
+    { id: 'AL-DATE-E08', name: 'New period ends before existing starts', start: '2026-07-01', end: '2026-07-30', overlap: false },
 ];
 
 const DATE_EDGE_CASES = [
